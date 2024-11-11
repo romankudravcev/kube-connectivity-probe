@@ -28,7 +28,7 @@ spec:
                   name: connectivity-config
                   key: target
           ports:
-            - containerPort: 6443
+            - containerPort: 6558
 ---
 apiVersion: v1
 kind: Service
@@ -40,5 +40,5 @@ spec:
   selector:
     app: kube-connectivity-probe
   ports:
-    - port: 6443
-      targetPort: 6443
+    - port: 6558
+      targetPort: 6558
