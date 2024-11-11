@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kube-connectivity-probe
+  namespace: connectivity-probe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kube-connectivity-probe
+  template:
+    metadata:
+      labels:
+        app: kube-connectivity-probe
+    spec:
+      containers:
+        - name: probe
+          image: your-registry/kube-connectivity-probe:latest
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: connectivity-config
+                  key: port
+            - name: TARGET_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: connectivity-config
+                  key: target
+          ports:
+            - containerPort: $(PORT)
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kube-connectivity-probe-service
+  namespace: connectivity-probe
+spec:
+  type: NodePort
+  selector:
+    app: kube-connectivity-probe
+  ports:
+    - port: $(PORT)
+      targetPort: $(PORT)
