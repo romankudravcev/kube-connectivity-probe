@@ -3,18 +3,15 @@ FROM golang:1.21-alpine AS builder
 
 WORKDIR /app
 
-# Copy go mod files first for better cache utilization
-COPY go.mod .
-COPY go.sum .
-
-# Download dependencies
+# Copy the go.mod and go.sum files to download dependencies first (if any)
+COPY go.mod ./
 RUN go mod download
 
 # Copy source code
 COPY . .
 
 # Build the application
-RUN CGO_ENABLED=0 GOOS=linux go build -o kube-connectivity-probe
+RUN go build -o kube-connectivity-probe
 
 # Final stage
 FROM alpine:3.19
