@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: probe
-          image: your-registry/kube-connectivity-probe:latest
+          image: ghcr.io/romankudravcev/kube-connectivity-probe:latest
           env:
             - name: PORT
               valueFrom:

@@ -1,5 +1,5 @@
 # Build stage
-FROM golang:1.21-alpine AS builder
+FROM golang:1.22-alpine AS builder
 
 WORKDIR /app
 
@@ -14,15 +14,15 @@ COPY . .
 RUN go build -o kube-connectivity-probe
 
 # Final stage
-FROM alpine:3.19
+FROM gcr.io/distroless/base-debian11
 
 WORKDIR /app
 
 # Copy the binary from builder
-COPY --from=builder /app/kube-connectivity-probe .
+COPY --from=builder /app/kube-connectivity-probe /kube-connectivity-probe
 
 # Expose the health check port
 EXPOSE 8080
 
 # Run the application
-CMD ["./kube-connectivity-probe"]
+CMD ["/kube-connectivity-probe"]
